@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{36F8FF8A-72AB-66CE-3ABC-2BBD108E1E9C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
+    <CompilerResponseFile></CompilerResponseFile>
+    <UnityProjectType>Game:1</UnityProjectType>
+    <UnityBuildTarget>WebGL:20</UnityBuildTarget>
+    <UnityVersion>5.5.0f3</UnityVersion>
+    <RootNamespace></RootNamespace>
+    <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Temp\UnityVS_bin\Debug\</OutputPath>
+    <IntermediateOutputPath>Temp\UnityVS_obj\Debug\</IntermediateOutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_5_0;UNITY_5_5;UNITY_5;UNITY_ANALYTICS;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_GENERICS;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_UNET;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;INCLUDE_DYNAMIC_GI;INCLUDE_GI;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;UNITY_WEBGL;UNITY_WEBGL_API;UNITY_DISABLE_WEB_VERIFICATION;UNITY_GFX_USE_PLATFORM_VSYNC;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_VR;ENABLE_IL2CPP;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE;ENABLE_VSTU</DefineConstants>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Temp\UnityVS_bin\Release\</OutputPath>
+    <IntermediateOutputPath>Temp\UnityVS_obj\Release\</IntermediateOutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_5_0;UNITY_5_5;UNITY_5;UNITY_ANALYTICS;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_GENERICS;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_UNET;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;INCLUDE_DYNAMIC_GI;INCLUDE_GI;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;UNITY_WEBGL;UNITY_WEBGL_API;UNITY_DISABLE_WEB_VERIFICATION;UNITY_GFX_USE_PLATFORM_VSYNC;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_VR;ENABLE_IL2CPP;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE;ENABLE_VSTU</DefineConstants>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Core" />
+    <Reference Include="Boo.Lang" />
+    <Reference Include="UnityScript.Lang" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="UnityEngine">
+      <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PlaymodeTestsRunner">
+      <HintPath>Library\UnityAssemblies\UnityEngine.PlaymodeTestsRunner.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Analytics">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Analytics.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.HoloLens">
+      <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VR">
+      <HintPath>Library\UnityAssemblies\UnityEngine.VR.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor">
+      <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Xcode">
+      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.iOS.Extensions.Common">
+      <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Common.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="IGS.CSharp.Plugins.csproj">
+      <Project>{74EE5C2E-CC37-DB1F-1FBD-43E8B2824774}</Project>
+      <Name>IGS.CSharp.Plugins</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Assets\Behaviours\AbstractBehaviour.cs" />
+    <Compile Include="Assets\Behaviours\FaceDirection.cs" />
+    <Compile Include="Assets\Behaviours\SimpleMovement.cs" />
+    <Compile Include="Assets\Behaviours\Walk.cs" />
+    <Compile Include="Assets\HighScore_Manager.cs" />
+    <Compile Include="Assets\InputManager\InputManager.cs" />
+    <Compile Include="Assets\InputManager\InputState.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\Bat.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\BlockSetProfile.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\ButtonHelper.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\CameraFollower.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\ColorTweener.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\Flare.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\HingeAutoRotator.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\InputManager.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\LandingLeg.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\LightRandomizer.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\MapGenerator.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\MeshCombiner.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\MouseFollower.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\Noise.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\RocketEngine.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\RotationTweener.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\SimpleExamplesController.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\SimpleRNG.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\SortingOrderSetter.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\Spacecraft.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\SpiderLeg.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\UICustomSlider.cs" />
+    <Compile Include="Assets\Light2D\Examples\Scripts\Wisp.cs" />
+    <Compile Include="Assets\Light2D\Scripts\CustomSprite.cs" />
+    <Compile Include="Assets\Light2D\Scripts\LightObstacleGenerator.cs" />
+    <Compile Include="Assets\Light2D\Scripts\LightObstacleMesh.cs" />
+    <Compile Include="Assets\Light2D\Scripts\LightObstacleSprite.cs" />
+    <Compile Include="Assets\Light2D\Scripts\LightSprite.cs" />
+    <Compile Include="Assets\Light2D\Scripts\LightingSystem.cs" />
+    <Compile Include="Assets\Light2D\Scripts\LightingSystemPrefabConfig.cs" />
+    <Compile Include="Assets\Light2D\Scripts\ObstacleCameraPostPorcessor.cs" />
+    <Compile Include="Assets\Light2D\Scripts\Point2.cs" />
+    <Compile Include="Assets\Light2D\Scripts\Util.cs" />
+    <Compile Include="Assets\ModMenu.cs" />
+    <Compile Include="Assets\OnMountain.cs" />
+    <Compile Include="Assets\PlayerController.cs" />
+    <Compile Include="Assets\Rope.cs" />
+    <Compile Include="Assets\Rope2D.cs" />
+    <Compile Include="Assets\Smooth2DCam.cs" />
+    <Compile Include="Assets\TopRope.cs" />
+    <Compile Include="Assets\Tutorial.cs" />
+    <Compile Include="Assets\UIController.cs" />
+    <Compile Include="Assets\startGame.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Light2D\Examples\Resources\Shaders\Noise.cginc" />
+    <None Include="Assets\Light2D\Examples\Resources\Shaders\TransparentVertexColor.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\AlphaReplace.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\AmbientLightComputer.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\FastBlur.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\Light1.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\Light20.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\Light30.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\Light40.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\Light50.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\Light60.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\Light70.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\Light80.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\Light9.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\Light90.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\LightAuto.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\LightBase.cginc" />
+    <None Include="Assets\Light2D\Resources\Shaders\LightBlender.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\LightIgnoreObstacles.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\LightOverlay.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\LightOverlaySingleCamera.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\NormalMap.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\NormalMappedLight.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\ObstacleTexturePostProcessor.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\TransparentDualColorNormalMapped.shader" />
+    <None Include="Assets\Light2D\Resources\Shaders\TransparentNormalMapped.shader" />
+    <None Include="Assets\Light2D\changelog.txt" />
+    <None Include="Assets\Notes.txt" />
+    <None Include="Assets\Standard Assets\Cameras\CameraGuidelines.txt" />
+    <None Include="Assets\Standard Assets\Characters\FirstPersonCharacter\FirstPersonCharacterGuidelines.txt" />
+    <None Include="Assets\Standard Assets\Characters\RollerBall\RollerBallGuidelines.txt" />
+    <None Include="Assets\Standard Assets\Characters\ThirdPersonCharacter\ThirdPersonCharacterGuidelines.txt" />
+    <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
+    <None Include="Assets\Standard Assets\Prototyping\Shaders\WorldCoordDiffuse.shader" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
+</Project>

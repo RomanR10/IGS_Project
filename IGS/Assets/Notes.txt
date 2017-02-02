@@ -1,0 +1,13 @@
+Notes for IGS
+
+THURSDAY
+1/19/17
+-Work on forces that player swings with! (TRY ROTATE AROUND!!!!!!!!!!!!!)
+-Rope swings pretty good in on correct axis
+-Need to figure out how the momentum is going to carry the players upward and about
+
+
+2/2/2017
+-Centripetal acceletraion works for player two but player one cant seem to rotate around player two without swapping parent and child (too difficult to complete)
+-NEED TO ADD TOGGLE TO ATTACH/DEATTACH so when player holds down button they attached and must release and press again to deattach
+-Need to add a death screen when player falls for a certain peroid of time
