@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     private bool twoDisconnectBuffer = false;
     private bool twoReattachBuffer = false;
 
-    private bool Anchor = false; //false == player 1 |||||||||||| true == player 2
+    //private bool Anchor = false; //false == player 1 |||||||||||| true == player 2
     private GameObject anchor;
 
     private GameObject[] ClimbableSurfaces;
@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
     private bool isSecondPlayer = false;
 
     public GameObject[] Rope = new GameObject[25];
-    private string RopeTag = "Rope";
+    //private string RopeTag = "Rope";
     private GameObject SecondPlayerEnd;
     private GameObject TopRopeSegment;
     private GameObject RopeParent;
@@ -65,6 +65,9 @@ public class PlayerController : MonoBehaviour
     private HighScore_Manager Score_manager;
 
 
+    //ModMenu
+    private ModMenu modMenu;
+
     Vector3 direction; //second direction
     Vector3 directionOne;
     bool allowForce = true;
@@ -74,6 +77,19 @@ public class PlayerController : MonoBehaviour
     float currentLerpTime;
     private bool startLerp = false;
 
+    private float playersDistanceFromMain = 0f;
+    private float cameraFloor = 20f;
+    private float fallTime = 0f;
+
+    //STARTGAME
+    private bool single = false;
+
+    //Attach/deattach toggle
+    private bool toggle = false;
+
+    //SINGLE PLAYER
+    private bool playerAttached = true;
+
     // Use this for initialization
     void Start()
     {
@@ -81,8 +97,17 @@ public class PlayerController : MonoBehaviour
         gameStart = true;
 
         RopeParent = GameObject.Find("Rope_Short").gameObject;
+        //modMenu = GameObject.Find("ModMenu").GetComponent<ModMenu>();
+
+        //Debug.Log("single status: " + PlayerPrefs.GetInt("single")); //hehe single status
+
+        if (PlayerPrefs.GetInt("single") == 0)
+            single = true;
+        else if (PlayerPrefs.GetInt("single") == 1)
+            single = false;
 
         manager = GameObject.Find("GameManager");
+        modMenu = manager.GetComponent<ModMenu>();
         Score_manager = manager.GetComponent<HighScore_Manager>();
 
         if (transform.tag == "Player2")
@@ -94,7 +119,8 @@ public class PlayerController : MonoBehaviour
         {
             if (GetComponent<Rigidbody2D>() != null)
                 rb1 = GetComponent<Rigidbody2D>();
-
+            
+            //init for other gameobject
             rb2 = GameObject.Find("Player2").GetComponent<Rigidbody2D>();
 
             //Used for resetting player on respawn
@@ -112,6 +138,7 @@ public class PlayerController : MonoBehaviour
             if (GetComponent<Rigidbody2D>() != null)
                 rb2 = GetComponent<Rigidbody2D>();
 
+            //init for other gameobject
             rb1 = GameObject.Find("Player").GetComponent<Rigidbody2D>();
 
             //Used for resetting player on respawn
@@ -163,9 +190,9 @@ public class PlayerController : MonoBehaviour
         //Rope = GameObject.FindGameObjectsWithTag(RopeTag);
 
         int ropeLength = Rope.Length;
-        Debug.Log(ropeLength);
+        //Debug.Log(ropeLength);
         SecondPlayerEnd = Rope[ropeLength - 1]; //For some reason find game objects places the last parented gameObject first second player starts on bottom
-        Debug.Log(SecondPlayerEnd.transform.position);
+        //Debug.Log(SecondPlayerEnd.transform.position);
 
         TopRopeSegment = Rope[0];
 
@@ -186,7 +213,8 @@ public class PlayerController : MonoBehaviour
 
             transform.parent = SecondPlayerEnd.transform;
 
-        } else
+        }
+        else
         {
             //First Player joint!!
             PlayerOneJoint = FirstPlayer.AddComponent<HingeJoint2D>();
@@ -207,11 +235,11 @@ public class PlayerController : MonoBehaviour
 
         //JUICEE
         p1_OgMat = GameObject.Find("Character01_StiffyMode").GetComponent<Renderer>().material;
-        p2_OgMat = GameObject.Find("Character02_StiffyMode").GetComponent<Renderer>().material;
+        //p2_OgMat = GameObject.Find("Character02_StiffyMode").GetComponent<Renderer>().material;
 
         p1_Lighter = (Material)Resources.Load("light_blue", typeof(Material)) as Material;
         p2_Lighter = Resources.Load("light_red", typeof(Material)) as Material;
-        
+
 
 
     }
@@ -220,38 +248,35 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        //Rigidbody2D rb2 = GetComponent<Rigidbody2D>();
-        //Debug.Log(rb.velocity);
-        //Debug.Log(PlayerOneJoint.jointAngle);
-        //Debug.Log(PlayerTwoJoint.jointAngle + " WHATS UP PLAYER TWO JOINT");
-        //Debug.Log(Rope[0].GetComponent<HingeJoint2D>().jointAngle);
 
-        /*timeCounter += Time.deltaTime * speed;
-        float x = Mathf.Cos(timeCounter) * width;
-        float y = Mathf.Sin(timeCounter) * height;
-
-        //SecondPlayer.transform.position = new Vector3(x + SecondPlayer.transform.position.x, y + SecondPlayer.transform.position.y, SecondPlayer.transform.position.z);
-        SecondPlayer.transform.position = new Vector3(x + anchor.transform.position.x, y + anchor.transform.position.y, SecondPlayer.transform.position.z);
-
-        Vector2 center = anchor.transform.position;
-        float radius = 6.3f;
-        angle += Input.GetAxis("Horizontal") * Time.deltaTime * speed / radius;
-        var offset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-        SecondPlayer.transform.position = center + offset;*/
-
-        if (isSecondPlayer && !PlayerTwoAttached && PlayerOneAttached)
+        if (modMenu.Motion)
         {
-            //direction = transform.position - FirstPlayer.transform.position;
-            //transform.right = Vector3.Cross(direction, Vector3.forward);
+            allowForce = true;
+        }
+        else if (!modMenu.Motion)
+            allowForce = false;
+
+        if (!allowForce)
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+
+
+        if (isSecondPlayer && !PlayerTwoAttached && PlayerOneAttached && allowForce)
+        {
+            direction = transform.position - FirstPlayer.transform.position;
+            transform.right = Vector3.Cross(direction, Vector3.forward);
         }
         else if (!isSecondPlayer && !PlayerOneAttached && PlayerTwoAttached)
         {
             //directionOne = transform.position - SecondPlayer.transform.position;
             //transform.right = Vector3.Cross(directionOne, Vector3.forward);
-            Debug.Log("Hello");
         }
-        Debug.DrawLine(FirstPlayer.transform.position, SecondPlayer.transform.position, Color.red);
+        //Debug.DrawLine(FirstPlayer.transform.position, SecondPlayer.transform.position, Color.red);
 
+
+        if (single)
+        {
+            singlePlayerClimb();
+        }
     }
 
 
@@ -260,27 +285,35 @@ public class PlayerController : MonoBehaviour
         checkCollisionState();
         updatePlayerValues();
 
-        if(!isSecondPlayer)
-            p1_climb(PlayerOneAttached);
+        if (!single)
+        {
+            if (!isSecondPlayer)
+                p1_climb(PlayerOneAttached);
+            else
+                p2_climb(PlayerTwoAttached);
+        }
+
+
+        //DEATHHHHHHHHHH
+
+        if (!PlayerOneAttached && !PlayerTwoAttached)
+            fallTime += Time.deltaTime;
         else
-            p2_climb(PlayerTwoAttached);
+            fallTime = 0f;
 
+        playersDistanceFromMain = Camera.main.transform.position.y - transform.position.y;
 
-            /*if (allowForce && isSecondPlayer)
-            {
-                rb2.AddForce(transform.right * speed);
-            }*/
-
-
-            //checkRopeAngles();
-
-            /* if (Rope[0].GetComponent<HingeJoint2D>().jointAngle > 360 || Rope[0].GetComponent<HingeJoint2D>().jointAngle < -360)
-             {
-                 resetRopeAngles();
-             }*/
-
-            if (transform.position.y < -2)
+        if (transform.position.y < -2)
             resetPlayers();
+
+        if (playersDistanceFromMain > cameraFloor && fallTime > 10)
+        {
+            //Debug.Log("Kill player");
+            //Debug.Log(fallTime);
+        }
+
+        //Debug.Log(Camera.main.transform.position.y - transform.position.y);
+
 
         if (!isSecondPlayer)
         {
@@ -297,6 +330,18 @@ public class PlayerController : MonoBehaviour
                 HighestPlayer = false;
         }
 
+
+        //Handle movement!!!!!!!!!!!!!!!!!!!!
+        if (!single)
+            coopMovement();
+        else if (single)
+            singlePlayerMovement();
+
+    }
+
+    //MOVEMENT CODE
+    void coopMovement()
+    {
         if (isSecondPlayer && PlayerOneAttached && !PlayerTwoAttached)
         {
             //Debug.Log(PlayerTwoJoint.jointAngle);
@@ -304,8 +349,10 @@ public class PlayerController : MonoBehaviour
             float h = CrossPlatformInputManager.GetAxis("Horizontal_2");
             if (h > 0)
             {
-                rb2.AddForce(Vector2.right * speed, ForceMode2D.Force);
-                //rb2.AddForce(transform.right * -speed);
+                if (!allowForce)
+                    rb2.AddForce(Vector2.right * speed, ForceMode2D.Force);
+                else
+                    rb2.AddForce(transform.right * -speed);
 
                 //if(transform.position.y >= )
                 //transform.RotateAround(FirstPlayer.transform.position, Vector2.right, 100 * Time.deltaTime);
@@ -315,8 +362,10 @@ public class PlayerController : MonoBehaviour
             }
             else if (h < 0)
             {
-                rb2.AddForce(Vector2.left * speed, ForceMode2D.Force);
-                //rb2.AddForce(transform.right * speed);
+                if (!allowForce)
+                    rb2.AddForce(Vector2.left * speed, ForceMode2D.Force);
+                else
+                    rb2.AddForce(transform.right * speed);
 
             }
 
@@ -349,25 +398,138 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void singlePlayerMovement()
+    {
+        if (isSecondPlayer && PlayerOneAttached && !PlayerTwoAttached)
+        {
+            //Debug.Log(PlayerTwoJoint.jointAngle);
+            // read inputs
+            float h = CrossPlatformInputManager.GetAxis("Horizontal");
+            if (h > 0)
+            {
+                if (!allowForce)
+                    rb2.AddForce(Vector2.right * speed, ForceMode2D.Force);
+                else
+                    rb2.AddForce(transform.right * -speed);
+
+                //if(transform.position.y >= )
+                //transform.RotateAround(FirstPlayer.transform.position, Vector2.right, 100 * Time.deltaTime);
+                //transform.LookAt(FirstPlayer.transform.position);
+
+
+            }
+            else if (h < 0)
+            {
+                if (!allowForce)
+                    rb2.AddForce(Vector2.left * speed, ForceMode2D.Force);
+                else
+                    rb2.AddForce(transform.right * speed);
+
+            }
+        }
+        else if (!isSecondPlayer && PlayerTwoAttached && !PlayerOneAttached)
+        {
+            //Debug.Log(PlayerTwoJoint.jointAngle);
+            // read inputs
+            float h = CrossPlatformInputManager.GetAxis("Horizontal");
+            if (h > 0)
+            {
+                //Debug.Log("Hello");
+                rb1.AddForce(Vector2.right * speed * 2, ForceMode2D.Force);
+                //rb1.AddForce(transform.right * -speed);
+
+                //if(transform.position.y >= )
+                //transform.RotateAround(FirstPlayer.transform.position, Vector2.right, 100 * Time.deltaTime);
+                //transform.LookAt(FirstPlayer.transform.position);
+
+
+            }
+            else if (h < 0)
+            {
+                rb1.AddForce(Vector2.left * speed * 2, ForceMode2D.Force);
+                //rb1.AddForce(transform.right * speed);
+
+            }
+        }
+    }
     //ATTACHING?REATTACHING
+
+    void singlePlayerClimb()
+    {
+        float vertical = Input.GetAxisRaw("Vertical");
+
+        if(vertical != 0)
+        {
+
+            if (toggle == false)
+            {
+                
+                if (vertical < 0 && playerAttached)
+                {
+                    if (PlayerOneAttached && oneReattachBuffer && !isSecondPlayer && !PlayerTwoAttached)
+                    {
+                        //Debug.Log("p1_deattach");
+                        p1_deattach();
+                        oneDisconnectBuffer = false;
+                        StartCoroutine("waitForOne", .5f);
+                        playerAttached = false;
+                    }
+                    else if (PlayerTwoAttached && twoReattachBuffer && isSecondPlayer && !PlayerOneAttached)
+                    {
+                        //Debug.Log("p2_deattach");
+                        twoDisconnectBuffer = true;
+                        StartCoroutine("waitForTwo", .5f);
+                        p2_deattach();
+                        playerAttached = false;
+                    }
+                }else if(vertical > 0 && !playerAttached)
+                {
+
+                    if (!PlayerTwoAttached && PlayerOneClimb && oneDisconnectBuffer && !isSecondPlayer && !PlayerOneAttached && !playerAttached)
+                    {
+                        playerAttached = true;
+
+                        //Debug.Log("p1_reattach");
+                        oneReattachBuffer = false;
+                        StartCoroutine("waitForReattach", .5f);
+                        p1_reattach();
+                    }
+                    else if (!PlayerOneAttached && PlayerTwoClimb && !twoDisconnectBuffer && isSecondPlayer && !PlayerTwoAttached && !playerAttached)
+                    {
+                        playerAttached = true;
+                        //Debug.Log("p2_reattach" + oneReattachBuffer);
+                        twoReattachBuffer = false;
+                        StartCoroutine("waitForReattachTwo", .5f);
+                        p2_reattach();
+                    }
+                    else if (PlayerTwoClimb && !PlayerOneAttached && !twoDisconnectBuffer && isSecondPlayer)
+                        Debug.Log("Connnection ");
+                }
+            }
+        }
+
+        if (vertical == 0)
+            toggle = false;
+
+    }
 
     void p1_climb(bool attached)
     {
-       //Handle if Playeroneattached/playeroneconnectiontosurface
+        //Handle if Playeroneattached/playeroneconnectiontosurface
         float vertical = Input.GetAxis("Vertical");
         //Debug.Log(vertical +" : "+ attached);
-
         if (vertical < 0 && attached && oneReattachBuffer)
         {
             p1_deattach();
             oneDisconnectBuffer = false;
             StartCoroutine("waitForOne", .5f);
         }
-        else if(vertical < 0 && !attached && PlayerOneClimb && oneDisconnectBuffer) //Handle reattaching PlayerOneClimb equals the ray cast condition
+        else if (vertical < 0 && !attached && PlayerOneClimb && oneDisconnectBuffer) //Handle reattaching PlayerOneClimb equals the ray cast condition
         {
             p1_reattach();
             oneReattachBuffer = false;
             StartCoroutine("waitForReattach", .5f);
+
         }
     }
 
@@ -375,6 +537,7 @@ public class PlayerController : MonoBehaviour
     {
         PlayerOneAttached = false;
         PlayerOneJoint.enabled = false;
+        rb1.constraints = RigidbodyConstraints2D.FreezeRotation;
         calculateForceNeeded(1);
     }
 
@@ -382,24 +545,12 @@ public class PlayerController : MonoBehaviour
     {
         PlayerOneJoint.enabled = true;
         PlayerOneAttached = true;
+        rb1.constraints = RigidbodyConstraints2D.FreezeAll;
     }
 
     void p2_climb(bool attached)
     {
-        //Handle if Playeroneattached/playeroneconnectiontosurface
         float vertical = CrossPlatformInputManager.GetAxis("Vertical_2");
-        //Debug.Log(vertical);
-        //Debug.Log(Anchor);
-        //Debug.Log(twoDisconnectBuffer);
-
-       // if (attached)
-        //    Debug.Log(vertical + " : 'player2' " + attached);
-
-        //if (vertical > 0 && PlayerTwoClimb && attached)
-        //{
-        //    rb2.AddForce(Vector2.up * speed * Time.deltaTime);
-        //}
-
 
         if (vertical < 0 && attached && twoReattachBuffer)
         {
@@ -409,11 +560,13 @@ public class PlayerController : MonoBehaviour
         }
         else if (vertical < 0 && !attached && PlayerTwoClimb && !twoDisconnectBuffer) //Handle reattaching PlayerOneClimb equals the ray cast condition
         {
-           // Debug.Log("reattach");
+            // Debug.Log("reattach");
             p2_reattach();
             twoReattachBuffer = false;
             StartCoroutine("waitForReattachTwo", .5f);
         }
+
+
     }
 
     void p2_deattach()
@@ -428,9 +581,10 @@ public class PlayerController : MonoBehaviour
     {
         //PlayerTwoJoint.enabled = true;
         PlayerTwoAttached = true;
-        startLerp = true;
+        rb2.constraints = RigidbodyConstraints2D.FreezeAll;
+        //startLerp = true;
         transform.rotation = Quaternion.Euler(0, 0, 0);
-        //transform.rotation = Vector3.Lerp(transform.rotation, Quater, perc);
+
     }
 
     private IEnumerator lerpReset()
@@ -445,6 +599,7 @@ public class PlayerController : MonoBehaviour
         rb2.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezePositionX | rb2.constraints;
 
     }
+
 
     private IEnumerator waitForOne(float waitTime)
     {
@@ -470,7 +625,7 @@ public class PlayerController : MonoBehaviour
 
     void checkRopeAngles()
     {
-        if(Rope[0].GetComponent<HingeJoint2D>().jointAngle > 360 || Rope[0].GetComponent<HingeJoint2D>().jointAngle < -360)
+        if (Rope[0].GetComponent<HingeJoint2D>().jointAngle > 360 || Rope[0].GetComponent<HingeJoint2D>().jointAngle < -360)
         {
             Debug.Log("Hello am i awake");
             resetRopeAngles();
@@ -479,7 +634,7 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator resetRopeAngles()
     {
-        foreach(GameObject r in Rope)
+        foreach (GameObject r in Rope)
         {
             r.GetComponent<HingeJoint2D>().useLimits = true;
         }
@@ -519,6 +674,7 @@ public class PlayerController : MonoBehaviour
         //rb1.velocity = new Vector3(0, 0, 0);
         //rb2.velocity = new Vector3(0, 0, 0);
 
+        playerAttached = true;
         PlayerOneAttached = true;
         PlayerTwoAttached = false;
     }
@@ -540,11 +696,23 @@ public class PlayerController : MonoBehaviour
                     PlayerOneClimb = false;
 
                 //JUICE
-                if (PlayerOneClimb)
+                if (!single)
                 {
-                    GameObject temper = GameObject.Find("Character01_StiffyMode");
-                    temper.GetComponent<Renderer>().material = p1_Lighter;
+                    if (PlayerOneClimb)
+                    {
+                        GameObject temper = GameObject.Find("Character01_StiffyMode");
+                        temper.GetComponent<Renderer>().material = p1_Lighter;
+                    }
                 }
+                else if (single)
+                {
+                    if (PlayerOneClimb && !PlayerTwoAttached)
+                    {
+                        GameObject temper = GameObject.Find("Character01_StiffyMode");
+                        temper.GetComponent<Renderer>().material = p1_Lighter;
+                    }
+                }
+
             }
             else
                 PlayerOneClimb = false;
@@ -564,17 +732,28 @@ public class PlayerController : MonoBehaviour
 
             if (Physics.Raycast(transform.position, Vector3.forward, out hit))
             {
-               // print("Player 2 found an object - distance: " + hit.distance + " obj name: " + hit.transform.name);
+                // print("Player 2 found an object - distance: " + hit.distance + " obj name: " + hit.transform.name);
                 if (hit.transform.tag == SurfaceTag)
                     PlayerTwoClimb = true;
                 else
                     PlayerTwoClimb = false;
 
                 //JUICE
-                if (PlayerTwoClimb)
+                if (!single)
                 {
-                    GameObject temper = GameObject.Find("Character02_StiffyMode");
-                    temper.GetComponent<Renderer>().material = p2_Lighter;
+                    if (PlayerTwoClimb)
+                    {
+                        //GameObject temper = GameObject.Find("Character02_StiffyMode");
+                        //temper.GetComponent<Renderer>().material = p2_Lighter;
+                    }
+                }
+                else if (single)
+                {
+                    if (PlayerTwoClimb && !PlayerOneAttached)
+                    {
+                       // GameObject temper = GameObject.Find("Character02_StiffyMode");
+                       // temper.GetComponent<Renderer>().material = p2_Lighter;
+                    }
                 }
 
             }
@@ -584,8 +763,8 @@ public class PlayerController : MonoBehaviour
             //JUICE
             if (!PlayerTwoClimb)
             {
-                GameObject temp = GameObject.Find("Character02_StiffyMode");
-                temp.GetComponent<Renderer>().material = p2_OgMat;
+               // GameObject temp = GameObject.Find("Character02_StiffyMode");
+                //temp.GetComponent<Renderer>().material = p2_OgMat;
             }
 
         }
@@ -601,14 +780,18 @@ public class PlayerController : MonoBehaviour
             PlayerOneConnectionToSurface = FirstPlayer.GetComponent<PlayerController>().PlayerOneConnectionToSurface;
             PlayerOneClimb = FirstPlayer.GetComponent<PlayerController>().PlayerOneClimb;
             PlayerOneAttached = FirstPlayer.GetComponent<PlayerController>().PlayerOneAttached;
+           // oneDisconnectBuffer = FirstPlayer.GetComponent<PlayerController>().oneDisconnectBuffer;
+           // oneReattachBuffer = FirstPlayer.GetComponent<PlayerController>().oneReattachBuffer;
             //PlayerDeattached = FirstPlayer.GetComponent<PlayerController>().PlayerDeattached;
-           // PlayerAttached = FirstPlayer.GetComponent<PlayerController>().PlayerAttached;
+            // PlayerAttached = FirstPlayer.GetComponent<PlayerController>().PlayerAttached;
         }
         else if (!isSecondPlayer)
         {
             PlayerTwoConnectionToSurface = SecondPlayer.GetComponent<PlayerController>().PlayerTwoConnectionToSurface;
             PlayerTwoClimb = SecondPlayer.GetComponent<PlayerController>().PlayerTwoClimb;
             PlayerTwoAttached = SecondPlayer.GetComponent<PlayerController>().PlayerTwoAttached;
+            //twoDisconnectBuffer = SecondPlayer.GetComponent<PlayerController>().twoDisconnectBuffer;
+            //twoReattachBuffer = SecondPlayer.GetComponent<PlayerController>().twoReattachBuffer;
             //PlayerDeattached = SecondPlayer.GetComponent<PlayerController>().PlayerDeattached;
             //PlayerAttached = SecondPlayer.GetComponent<PlayerController>().PlayerAttached;
 
@@ -629,7 +812,7 @@ public class PlayerController : MonoBehaviour
 
     void calculateForceNeeded(int playerNum)
     {
-        if(playerNum == 2)
+        if (playerNum == 2)
         {
             //Debug.Log(rb2.velocity);
             bool direction = false; //Direction false == left and true == right
@@ -639,14 +822,14 @@ public class PlayerController : MonoBehaviour
                 direction = false;
 
             applyForce(direction, 2); //Send direction of player two since player one is connected to surface + send highest player details for the apply force to figure direction
-            PlayerTwoConnectionToSurface = false;
+            //PlayerTwoConnectionToSurface = false;
 
         }
-        else if(playerNum == 1)
+        else if (playerNum == 1)
         {
 
-           // Debug.Log(rb1.velocity + " FirstPlayerSpeed");
-           // Debug.Log(rb2.velocity + " SecondPlayerSpeed");
+            // Debug.Log(rb1.velocity + " FirstPlayerSpeed");
+            // Debug.Log(rb2.velocity + " SecondPlayerSpeed");
 
             bool direction = false; //Direction false == left and true == right
             if (rb2.velocity.x > 0)
@@ -655,7 +838,7 @@ public class PlayerController : MonoBehaviour
                 direction = false;
 
             applyForce(direction, 1); //Send direction of player two since player one is connected to surface + send highest player details for the apply force to figure direction
-            PlayerOneConnectionToSurface = false;
+           // PlayerOneConnectionToSurface = false;
         }
     }
 
@@ -667,10 +850,10 @@ public class PlayerController : MonoBehaviour
 
             rb1.AddForce(Vector2.left * jumpOffSpeed, ForceMode2D.Impulse); //PLAYER ONE FORCES
 
-           // Debug.Log("PLAYER ONE JUMP OFF FORCE");
+             Debug.Log("PLAYER ONE JUMP OFF FORCE");
 
-           Rigidbody2D rbJoint = PlayerTwoJoint.GetComponent<Rigidbody2D>();
-           rbJoint.AddForce(Vector2.right * jumpOffSpeed, ForceMode2D.Impulse);
+            //Rigidbody2D rbJoint = PlayerTwoJoint.GetComponent<Rigidbody2D>();
+            //rbJoint.AddForce(Vector2.right * jumpOffSpeed, ForceMode2D.Impulse);
 
             rb2.AddForce(Vector2.up * jumpOffSpeed * 2, ForceMode2D.Impulse);
 
@@ -682,39 +865,39 @@ public class PlayerController : MonoBehaviour
 
             rb1.AddForce(Vector2.right * jumpOffSpeed, ForceMode2D.Impulse); //PLAYER ONE FORCES
 
-           // Debug.Log("PLAYER ONE JUMP OFF FORCE");
+             Debug.Log("PLAYER ONE JUMP OFF FORCE");
 
-             Rigidbody2D rbJoint = PlayerTwoJoint.GetComponent<Rigidbody2D>();
-             rbJoint.AddForce(Vector2.left * jumpOffSpeed, ForceMode2D.Impulse);
+           // Rigidbody2D rbJoint = PlayerTwoJoint.GetComponent<Rigidbody2D>();
+           // rbJoint.AddForce(Vector2.left * jumpOffSpeed, ForceMode2D.Impulse);
 
             rb2.AddForce(Vector2.up * jumpOffSpeed * 2, ForceMode2D.Impulse);
 
-           // Debug.Log("ENGAGE JUMP OFF FORCE PLAYER TWO");
+            // Debug.Log("ENGAGE JUMP OFF FORCE PLAYER TWO");
         }
-        else if (direction && attachedPlayer == 2)
+        else if (direction && attachedPlayer == 2 && rb1.velocity.x > 2)
         {
 
             rb2.AddForce(Vector2.left * jumpOffSpeed, ForceMode2D.Impulse); //PLAYER ONE FORCES
 
             //Debug.Log("PLAYER two JUMP OFF FORCE");
 
-            Rigidbody2D rbJoint = PlayerOneJoint.GetComponent<Rigidbody2D>();
-            rbJoint.AddForce(Vector2.right * jumpOffSpeed, ForceMode2D.Impulse);
+           // Rigidbody2D rbJoint = PlayerOneJoint.GetComponent<Rigidbody2D>();
+           // rbJoint.AddForce(Vector2.right * jumpOffSpeed, ForceMode2D.Impulse);
 
             rb1.AddForce(Vector2.up * jumpOffSpeed * 2, ForceMode2D.Impulse);
 
             //Debug.Log("ENGAGE JUMP OFF FORCE PLAYER TWO");
 
         }
-        else if (!direction && attachedPlayer == 2)
+        else if (!direction && attachedPlayer == 2 && rb1.velocity.x < -2)
         {
 
             rb2.AddForce(Vector2.right * jumpOffSpeed, ForceMode2D.Impulse); //PLAYER ONE FORCES
 
             //Debug.Log("PLAYER two JUMP OFF FORCE");
 
-            Rigidbody2D rbJoint = PlayerOneJoint.GetComponent<Rigidbody2D>();
-            rbJoint.AddForce(Vector2.left * jumpOffSpeed, ForceMode2D.Impulse);
+           // Rigidbody2D rbJoint = PlayerOneJoint.GetComponent<Rigidbody2D>();
+           // rbJoint.AddForce(Vector2.left * jumpOffSpeed, ForceMode2D.Impulse);
 
             rb1.AddForce(Vector2.up * jumpOffSpeed * 2, ForceMode2D.Impulse);
 

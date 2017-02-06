@@ -33,6 +33,9 @@ public class Smooth2DCam : MonoBehaviour
         bool follow_p1 = GameObject.Find("Player").GetComponent<PlayerController>().PlayerOneAttached;
         bool follow_p2 = GameObject.Find("Player2").GetComponent<PlayerController>().PlayerTwoAttached;
 
+        follow_p1 = true;
+        follow_p2 = false;
+
         if (follow_p1)
         {
             startPos = transform.position;

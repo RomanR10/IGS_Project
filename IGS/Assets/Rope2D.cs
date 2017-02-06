@@ -28,6 +28,8 @@ public class Rope2D : MonoBehaviour {
             }
             else
                 rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+            //transform.position = GameObject.Find("Player2").transform.position;
         }
 		
 	}

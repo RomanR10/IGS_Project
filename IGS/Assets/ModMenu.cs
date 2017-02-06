@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ModMenu : MonoBehaviour {
 
     public GameObject modMenuObj;
-    
+
 
     public Slider speedSliderUI;
     public Slider jumpSliderUI;
@@ -14,6 +14,9 @@ public class ModMenu : MonoBehaviour {
     public GameObject star1;
     public GameObject star2;
 
+    private Toggle p1CicularMotion;
+    private Text MotionText;
+    public bool Motion = false;
 
     private bool menuOn = false;
     private bool awesome = false;
@@ -32,6 +35,15 @@ public class ModMenu : MonoBehaviour {
         {
             if (child.name == "JumpSpeed_text_slider")
                 child.GetComponent<Text>().text = jumpSliderUI.value.ToString();
+        }
+
+        foreach (Transform child in modMenuObj.transform)
+        {
+            if (child.name == "p1_circularMotion")
+            {
+                p1CicularMotion = child.GetComponent<Toggle>();
+                MotionText = child.GetComponentInChildren<Text>();
+            }
         }
 
     }
@@ -89,6 +101,25 @@ public class ModMenu : MonoBehaviour {
             star2.SetActive(false);
         }
 
+    }
+
+    public void onMotionToggle()
+    {
+        Motion = p1CicularMotion.isOn;
+
+        if (Motion)
+        {
+            MotionText.text = "Player Motion: Circular Motion";
+        }
+        else if (!Motion)
+        {
+            MotionText.text = "Player Motion: Swing Motion";
+        }
+    }
+
+    public void onExit()
+    {
+        modMenuObj.SetActive(false);
     }
 
 
