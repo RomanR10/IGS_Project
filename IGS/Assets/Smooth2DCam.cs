@@ -4,7 +4,6 @@ using System.Collections;
 public class Smooth2DCam : MonoBehaviour
 {
 
-    public float dampTime = 0.15f;
     private Vector3 velocity = Vector3.zero;
     private Transform Player;
     private Transform Player2;
@@ -12,7 +11,7 @@ public class Smooth2DCam : MonoBehaviour
     public Camera cam;
     private Transform lastTarget;
 
-    float lerpTime = .35f;
+    public float lerpTime = .35f;
     float currentLerpTime;
 
     Vector3 startPos;

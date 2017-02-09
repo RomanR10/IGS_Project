@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using EaseTools;
 
 public class ModMenu : MonoBehaviour {
 
     public GameObject modMenuObj;
-
+    public EaseUI modMenuUI;
 
     public Slider speedSliderUI;
     public Slider jumpSliderUI;
@@ -20,10 +21,10 @@ public class ModMenu : MonoBehaviour {
 
     private bool menuOn = false;
     private bool awesome = false;
+    private bool moving = false;
 
     void Start()
     {
-        modMenuObj.SetActive(false);
         star1.SetActive(false);
         star2.SetActive(false);
         foreach (Transform child in speedSliderUI.transform)
@@ -50,16 +51,38 @@ public class ModMenu : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.M)&& !menuOn)
+        if (Input.GetKeyDown(KeyCode.M)&& !menuOn && !moving)
         {
-            modMenuObj.SetActive(true);
+
+            if (!menuOn && !moving)
+            {
+                modMenuUI.MoveIn();
+                moving = true;
+            }
+            StartCoroutine("wait", modMenuUI.DurationPos);
+
             menuOn = true;
         }
-        else if (Input.GetKeyDown(KeyCode.M) && menuOn)
+        else if (Input.GetKeyDown(KeyCode.M) && menuOn && !moving)
         {
-            modMenuObj.SetActive(false);
+
+            if (menuOn && !moving)
+            {
+                modMenuUI.MoveOut();
+                moving = true;
+            }
+
+            StartCoroutine("wait", modMenuUI.DurationPos);
+
             menuOn = false;
         }
+    }
+
+    IEnumerator wait(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        moving = false;
+
     }
 
     public void speedSlider()
@@ -119,7 +142,10 @@ public class ModMenu : MonoBehaviour {
 
     public void onExit()
     {
-        modMenuObj.SetActive(false);
+        modMenuUI.MoveOut();
+        moving = true;
+        StartCoroutine("wait", modMenuUI.DurationPos);
+
     }
 
 

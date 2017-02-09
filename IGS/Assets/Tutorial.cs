@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using EaseTools;
 
 public class Tutorial : MonoBehaviour {
     private GameObject tutorialCanvas;
@@ -9,6 +10,7 @@ public class Tutorial : MonoBehaviour {
 
     public bool pauseGame = true;
     private bool single = false;
+
 
     // Use this for initialization
     void Start()
@@ -24,12 +26,19 @@ public class Tutorial : MonoBehaviour {
 
         Debug.Log(single);
 
+
         if (single)
+        {
             tutorialCanvas.SetActive(false);
+
+        }
         else
+        {
             tutorialSingle.SetActive(false);
+        }
 
         pauseGame = true;
+
         Time.timeScale = 0;
 
     }
@@ -46,11 +55,16 @@ public class Tutorial : MonoBehaviour {
     {
         //Debug.Log("Tutorial close: start game");
         Time.timeScale = 1;
-
         if (!single)
+        {
+
             tutorialCanvas.SetActive(false);
+        }
         if (single)
+        {
             tutorialSingle.SetActive(false);
+
+        }
 
         pauseGame = false;
     }
