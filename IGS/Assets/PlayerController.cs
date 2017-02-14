@@ -93,7 +93,12 @@ public class PlayerController : MonoBehaviour
     private bool playerAttached = true;
 
     //Juice
-    private bool juice = false;
+    private bool juice = true;
+
+    private bool objMoving1 = false;
+    private bool objMoving2 = false;
+    private Vector2 objPos1;
+    private Vector2 objPos2;
 
     // Use this for initialization
     void Start()
@@ -216,6 +221,8 @@ public class PlayerController : MonoBehaviour
 
             PlayerTwoJoint.limits = limits;
 
+            PlayerTwoJoint.autoConfigureConnectedAnchor = false;
+
             transform.parent = SecondPlayerEnd.transform;
 
         }
@@ -230,6 +237,7 @@ public class PlayerController : MonoBehaviour
             limits.max = 359;
             PlayerOneJoint.limits = limits;
 
+            //PlayerOneJoint.autoConfigureConnectedAnchor = false;
 
             //joint.connectedBody = TopRopeSegment.GetComponent<Rigidbody>();
             PlayerOneJoint.useLimits = true;
@@ -337,6 +345,15 @@ public class PlayerController : MonoBehaviour
             coopMovement();
         else if (single)
             singlePlayerMovement();
+
+
+        /*if (PlayerOneAttached && objMoving1)
+        {
+            FirstPlayer.transform.position = new Vector3(objPos1.x, FirstPlayer.transform.position.y, FirstPlayer.transform.position.z);
+        }else if(PlayerTwoAttached && objMoving2)
+        {
+            SecondPlayer.transform.position = new Vector3(objPos2.x, SecondPlayer.transform.position.y, SecondPlayer.transform.position.z);
+        }*/
 
     }
 
@@ -476,8 +493,6 @@ public class PlayerController : MonoBehaviour
                         StartCoroutine("waitForReattachTwo", .5f);
                         p2_reattach();
                     }
-                    else if (PlayerTwoClimb && !PlayerOneAttached && !twoDisconnectBuffer && isSecondPlayer)
-                        Debug.Log("Connnection ");
                 }
             }
         }
@@ -532,7 +547,8 @@ public class PlayerController : MonoBehaviour
     {
         PlayerOneJoint.enabled = true;
         PlayerOneAttached = true;
-        rb1.constraints = RigidbodyConstraints2D.FreezeAll;
+        rb1.constraints = RigidbodyConstraints2D.FreezePositionY;
+        rb1.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
     void p2_climb(bool attached)
@@ -579,8 +595,7 @@ public class PlayerController : MonoBehaviour
     {
         //PlayerTwoJoint.enabled = true;
         PlayerTwoAttached = true;
-        rb2.constraints = RigidbodyConstraints2D.FreezeAll;
-        //startLerp = true;
+        rb2.constraints = RigidbodyConstraints2D.FreezeAll;//startLerp = true;
         transform.rotation = Quaternion.Euler(0, 0, 0);
 
     }
@@ -675,6 +690,7 @@ public class PlayerController : MonoBehaviour
         playerAttached = true;
         PlayerOneAttached = true;
         PlayerTwoAttached = false;
+        rb2.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
     //   ___         _   _   _        _              
@@ -689,12 +705,29 @@ public class PlayerController : MonoBehaviour
         {
             RaycastHit hit;
 
-            if (Physics.Raycast(transform.position, Vector3.forward, out hit))
+            if (Physics.Raycast(transform.position, Vector3.forward + new Vector3(0,0,3), out hit))
             {
                 //print("Player 1 found an object - distance: " + hit.distance + " obj name: " + hit.transform.name);
 
                 if (hit.transform.tag == SurfaceTag)
+                {
                     PlayerOneClimb = true;
+                    //Debug.Log(hit.transform.position);
+
+                    if (PlayerOneAttached)
+                    {
+                        hit.transform.GetComponentInChildren<PlatformSeperator>().playerConnected = true;
+                        if (hit.transform.GetComponentInChildren<PlatformSeperator>().trigger)
+                            objMoving1 = true;
+
+                        if (objMoving1)
+                        {
+                            objPos1 = hit.transform.position;
+                        }
+                    }else
+                        hit.transform.GetComponentInChildren<PlatformSeperator>().playerConnected = false;
+
+                }
                 else
                     PlayerOneClimb = false;
 
@@ -730,11 +763,28 @@ public class PlayerController : MonoBehaviour
         {
             RaycastHit hit;
 
-            if (Physics.Raycast(transform.position, Vector3.forward, out hit))
+            if (Physics.Raycast(transform.position, Vector3.forward + new Vector3(0, 0, 3), out hit))
             {
                 // print("Player 2 found an object - distance: " + hit.distance + " obj name: " + hit.transform.name);
                 if (hit.transform.tag == SurfaceTag)
+                {
                     PlayerTwoClimb = true;
+
+                    if (PlayerTwoAttached)
+                    {
+                        hit.transform.GetComponentInChildren<PlatformSeperator>().playerConnected = true;
+                        if (hit.transform.GetComponentInChildren<PlatformSeperator>().trigger)
+                            objMoving2 = true;
+
+                        if (objMoving2)
+                        {
+                            objPos2 = hit.transform.position;
+                        }
+                    }
+                    else
+                        hit.transform.GetComponentInChildren<PlatformSeperator>().playerConnected = false;
+
+                }
                 else
                     PlayerTwoClimb = false;
 

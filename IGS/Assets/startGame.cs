@@ -18,6 +18,8 @@ public class startGame : MonoBehaviour
 
     private static bool single = false;
 
+    private bool loadScene = false;
+
     void Start()
     {
         //Debug.Log(SceneManager.sceneCount);
@@ -38,10 +40,29 @@ public class startGame : MonoBehaviour
 
     public void OnSingle() //awww
     {
-        single = true;
-        singComp.ScaleOut();
-        PlayerPrefs.SetInt("single", 0);
+        if (loadScene == false)
+        {
+            loadScene = true;
+            single = true;
+            singComp.ScaleOut();
+            PlayerPrefs.SetInt("single", 0);
+
+            LoadNewScene();
+        }
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1, LoadSceneMode.Single);
+    }
+
+    IEnumerator LoadNewScene()
+    {
+        yield return new WaitForSeconds(3);
+
+        AsyncOperation async = SceneManager.LoadSceneAsync(1);
+
+        while (!async.isDone)
+        {
+            yield return null;
+        }
+
     }
 
     public void OnCoop()

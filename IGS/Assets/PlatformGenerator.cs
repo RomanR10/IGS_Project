@@ -14,10 +14,11 @@ public class PlatformGenerator : MonoBehaviour {
 
     private float flub;
     private Vector3 startPosition = new Vector3(-6.3f, 16.09f, 25);
-    private Vector2 minDistanceTall = new Vector2(10, 15);
-    private Vector2 minDistanceStandard = new Vector2(10, 10);
-    private Vector2 minDsitanceWide = new Vector2(10, 10);
-    private Vector2[] platformLocation = new Vector2[10];
+    private Vector2 minDistanceTall = new Vector2(15, 15);
+    private Vector2 minDistanceStandard = new Vector2(12, 10);
+    private Vector2 minDsitanceWide = new Vector2(12, 10);
+    private Vector2[] platformLocation = new Vector2[40];
+    private List<GameObject> platformList = new List<GameObject>();
 
     float distanceX = 0f;
     float distanceY = 0f;
@@ -25,7 +26,21 @@ public class PlatformGenerator : MonoBehaviour {
 
     int loop = 0;
 
+    int platforms = 0;
+
     private bool safe = false;
+
+    private int layer = 0;
+
+    private string[] platformNames = { "widePlatform", "tallPlatform", "standardPlatform" };
+
+    private float yMultipler;
+    private float xMultipler;
+
+    private bool spawnNewObjects = false;
+    private bool heightLayer = false;
+    private float curHeightY;
+    private float heightLimit;
 
     void Awake()
     {
@@ -35,138 +50,321 @@ public class PlatformGenerator : MonoBehaviour {
         camPosition = cam.transform.position;
         Debug.Log(camPosition);
 
-        AwakeGeneration();
     }
 
 	// Use this for initialization
 	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
-    void AwakeGeneration()
+
+        foreach(GameObject g in GameObject.FindGameObjectsWithTag("Climb Me"))
+        {
+            platformLocation[platforms] = new Vector2(g.transform.position.x, g.transform.position.y);
+            //Debug.Log("Found platform on load @ (" + platformLocation[platforms].x + ", " + platformLocation[platforms].y + ")");
+            platforms++;
+            platformList.Add(g);
+        }
+
+        heightLimit = GameObject.Find("Player").transform.position.y + 80;
+
+        Generation();
+
+    }
+
+    void Update()
+    {
+        /*if (GameObject.Find("Player").transform.position.y > heightLimit && !heightLayer)
+        {
+            for(int i = 0; i < platformList.Count; i++)
+            {
+                if(platformList[i].transform.position.y < 60)
+                {
+
+                    GameObject clone = platformList[i];
+                    clone.SetActive(false);
+                    platformList.RemoveAt(i);
+                    Debug.Log("Remove objs");
+                }
+
+                if (i == platformList.Count - 1)
+                {
+                    spawnNewObjects = true;
+                    heightLayer = true;
+                    curHeightY = GameObject.Find("Player").transform.position.y;
+                    heightLimit = heightLimit + (GameObject.Find("Player").transform.position.y);
+                }
+            }
+        }
+
+        if (spawnNewObjects)
+        {
+            StartCoroutine("movingGenerator");
+            spawnNewObjects = false;
+        }*/
+    }
+
+    void MovingGeneration()
+    {
+        int range = Random.Range(5, 8);
+        //Center - Left
+        //Center - Left
+        for (int i = 0; i < range; i++)
+        {
+            xMultipler = .1f * i;
+            yMultipler = .9f * i;
+            preCalc(-5 + (-15 * xMultipler), (heightLimit) + (18 * yMultipler));
+        }
+
+        //Center
+        for (int i = 0; i < range; i++)
+        {
+            xMultipler = .15f * i;
+            yMultipler = 1.15f * i;
+            preCalc(0, (heightLimit) + (18 * yMultipler));
+        }
+
+        //Center - Right
+        for (int i = 0; i < range; i++)
+        {
+            xMultipler = .15f * i;
+            yMultipler = 1.15f * i;
+            preCalc(30 + (15 * xMultipler), (heightLimit) + (18 * yMultipler));
+        }
+
+    }
+
+    IEnumerator movingGenerator()
+    {
+        int range = Random.Range(5, 8);
+        //Center - Left
+        //Center - Left
+        for (int i = 0; i < range; i++)
+        {
+            xMultipler = .1f * i;
+            yMultipler = .9f * i;
+            preCalc(-5 + (-15 * xMultipler), ((heightLimit / 2) + 50) + (18 * yMultipler));
+        }
+
+        //Center
+        for (int i = 0; i < range; i++)
+        {
+            xMultipler = .15f * i;
+            yMultipler = 1.15f * i;
+            preCalc(0, ((heightLimit / 2) + 50) + (18 * yMultipler));
+        }
+
+        //Center - Right
+        for (int i = 0; i < range; i++)
+        {
+            xMultipler = .15f * i;
+            yMultipler = 1.15f * i;
+            preCalc(30 + (15 * xMultipler), ((heightLimit / 2) + 50) + (18 * yMultipler));
+        }
+
+        yield return new WaitForSeconds(10);
+        heightLayer = false;
+    }
+
+
+    public void Generation()
     {
         int randy = Random.Range(0, 1);
-        Debug.Log(randy);
 
         //Spawn tall platform
         if (randy == 0) //LEFT SIDE of start platform
         {
+            int range = Random.Range(6, 8);
+
+            //Left side
+            /*for (int i = 0; i < range; i++)
+            {
+                xMultipler = .3f * i;
+                yMultipler = .3f * i;
+                preCalc(-20 + (-20 * xMultipler), -10 +  (15 * yMultipler));
+            }
+
+            //Right side
+            for (int i = 0; i < range; i++)
+            {
+                xMultipler = .3f * i;
+                yMultipler = .3f * i;
+                preCalc(40 +  (40 * xMultipler), -10  + (15 * yMultipler));
+            }*/
+
+            //Center - Left
+            for (int i = 0; i < range; i++)
+            {
+                xMultipler = .1f * i;
+                yMultipler = .9f * i;
+                preCalc(-5 + (-15 * xMultipler), 5 + (18 * yMultipler));
+            }
+
+
+            //Center
+            for (int i = 0; i < range; i++)
+            {
+                xMultipler = .15f * i;
+                yMultipler = 1.15f * i;
+                preCalc(0, 10 + (18 * yMultipler));
+            }
+
+            //Center - Right
+            for (int i = 0; i < range; i++)
+            {
+                xMultipler = .15f * i;
+                yMultipler = 1.15f * i;
+                preCalc(30 + (15 * xMultipler), 5 + (18 * yMultipler));
+            }
+
+
             //spawnTallPlatform(startPosition, distance);
-            Calculate(1, 0);
-            Calculate(1, 1);
-            Calculate(1, 2);
+            // Calculate("tallPlatform", platforms + 1, 15, -30);
+            // platforms = platforms + 1;
 
         }
-        /*else if (randy == 1) //RIGHT SIDE of start platform
+
+    }
+
+    void preCalc(float xPosition, float yPosition)
+    {
+        safe = false;
+        int randy = Random.Range(0, 3);
+        //Debug.LogError("Pre calc: randy = " + randy);
+
+        switch (randy)
         {
-            float distanceX = Random.Range(minDistanceTall.x + 0f, minDistanceTall.x * 2f);
-            float distanceY = Random.Range(minDistanceTall.y + 0f, minDistanceTall.y + 8f);
-            //Debug.Log(distanceX);
-            Vector2 distance = new Vector2(distanceX, distanceY);
-            platformLocation[0] = distance;
-
-            spawnTallPlatform(startPosition, distance);
-
-            distanceX = Random.Range(-minDistanceStandard.x + 0f, -minDistanceStandard.x + (-minDistanceStandard.x * .5f));
-            Debug.Log(distanceX + "standardPlatform");
-            distanceY = Random.Range(minDistanceStandard.y + 0f, minDistanceStandard.y + 10f);
-            distance = new Vector2(distanceX, distanceY + platformLocation[0].y / 4);
-            platformLocation[1] = distance;
-
-            spawnStandardPlatform(platformLocation[0], distance);
-
-            distanceX = Random.Range(-minDsitanceWide.x + 0f, -minDsitanceWide.x + (-minDsitanceWide.x * .5f));
-            Debug.Log(distanceX + "standardPlatform");
-            distanceY = Random.Range(minDsitanceWide.y + 0f, minDsitanceWide.y + 10f);
-            distance = new Vector2(distanceX, distanceY + platformLocation[1].y / 4);
-            platformLocation[2] = distance;
-
-            spawnWidePlatform(platformLocation[1], distance);
-
-            distanceX = Random.Range(-minDistanceStandard.x + 0f, -minDistanceStandard.x + (-minDistanceStandard.x * .5f));
-            Debug.Log(distanceX + "standardPlatform");
-            distanceY = Random.Range(minDistanceStandard.y + 0f, minDistanceStandard.y + 10f);
-            distance = new Vector2(distanceX, distanceY + platformLocation[2].y / 4);
-            platformLocation[3] = distance;
-
-            spawnStandardPlatform(platformLocation[2], distance);
-
-            distanceX = Random.Range(-minDsitanceWide.x + 0f, -minDsitanceWide.x + (-minDsitanceWide.x * .5f));
-            Debug.Log(distanceX + "standardPlatform");
-            distanceY = Random.Range(minDsitanceWide.y + 0f, minDsitanceWide.y + 10f);
-            distance = new Vector2(distanceX, distanceY + platformLocation[3].y / 4);
-            platformLocation[4] = distance;
-
-            spawnWidePlatform(platformLocation[3], distance);
-
-        }*/
+            case 0:
+                Calculate("standardPlatform", platforms + 1, yPosition, xPosition);
+                break;
+            case 1:
+                Calculate("tallPlatform", platforms + 1, yPosition, xPosition);
+                break;
+            case 2:
+                Calculate("widePlatform", platforms + 1, yPosition, xPosition);
+                break;
+            default:
+                break;
+        }
     }
 
     //Calculate
-    void Calculate(int cond, int platformTrack)
+    void Calculate(string name, int platformTrack, float layer, float xPos)
     {
         //0 - Standard
         //1 - Tall
         //2 - Wide
-        switch (cond)
+        switch (name)
         {
-            case 0:
+            case "standardPlatform":
 
-                distanceX = Random.Range(minDistanceStandard.x + 0f, minDistanceStandard.x + (minDistanceStandard.x * .5f));
-                Debug.Log(distanceX + "standardPlatform");
-                Debug.Log(minDistanceStandard.x + (minDistanceStandard.x * .5f));
-                distanceY = Random.Range(minDistanceStandard.y + 0f, minDistanceStandard.y + 10f);
-                distance = new Vector2(distanceX, distanceY + platformLocation[0].y / 2);
-                platformLocation[platformTrack] = distance;
-
-                break;
-            case 1:
-
-                /*do
+                while (safe == false)
                 {
-                    //distanceX = 0;
-                    //distanceY = 0;
-                    distanceX = Random.Range(-minDistanceTall.x + 0f, -minDistanceTall.x * 2f);
-                    distanceY = Random.Range(minDistanceTall.y + 0f, minDistanceTall.y + 8f);
-                    distance = new Vector2(distanceX, distanceY);
+                    distanceX = 0;
+                    distanceY = 0;
+
+                    if(xPos < 0)
+                    {
+                        distanceX = randomNumber(-minDistanceStandard.x + xPos, (-minDistanceStandard.x + xPos) * 2f);
+                    }else if(xPos == 0)
+                    {
+                        distanceX = randomNumber(-5, 5);
+                    }
+                    else
+                        distanceX = randomNumber(minDistanceStandard.x + xPos, minDistanceStandard.x * 2f);
+
+                    distanceY = randomNumber(minDistanceStandard.y, minDistanceStandard.y + 15f);
+
+                    distance = new Vector2(distanceX, distanceY + layer);
+
                     platformLocation[platformTrack] = distance;
-                    Debug.Log(distance + "tallPlatform");
-                    Checker(distance, platformTrack);
-                    //Debug.Log(Checker(distance, platformTrack));
 
-                    //Need to adjust distance to coordinate with the respective spawn position 
-                    //Right now all it is outputting is the random range created
-
-                } while (safe == false);
+                    Checker(distance, platformTrack); //length
+                }
 
                 if (safe)
                 {
-                    Debug.Log("checker is true");
+                    //Debug.Log("checker is true spawn position equals: " + platformLocation[platformTrack - 1]);
                     if (platformTrack > 0)
                     {
-                        spawnTallPlatform(platformLocation[platformTrack - 1], distance);
+                        spawnStandardPlatform(distance);
+                    }
+                }
 
-                    }
-                    else if (platformTrack == 0)
+                break;
+            case "tallPlatform":
+                
+                while(safe == false)
+                {
+                    distanceX = 0;
+                    distanceY = 0;
+
+
+                    if (xPos < 0)
                     {
-                        spawnTallPlatform(startPosition, distance);
+                        distanceX = randomNumber(-minDistanceTall.x + xPos, (-minDistanceTall.x + xPos) * 2f);
                     }
-                }*/
+                    else if (xPos == 0)
+                    {
+                        distanceX = randomNumber(-5, 5);
+                    }
+                    else
+                        distanceX = randomNumber(minDistanceTall.x + xPos, minDistanceTall.x * 2f);
+
+
+                    distanceY = randomNumber(minDistanceTall.y, minDistanceTall.y  + 15f);
+
+                    distance = new Vector2(distanceX, distanceY + layer);
+
+                    platformLocation[platformTrack] = distance;
+                    
+                    Checker(distance, platformTrack); //length
+                }
+
+                if (safe)
+                {
+                    //Debug.Log("checker is true spawn position equals: " + platformLocation[platformTrack]);
+                    if (platformTrack > 0)
+                    {
+                        spawnTallPlatform(distance);
+                    }
+                }
 
                 break;
 
-            case 2:
+            case "widePlatform":
 
-                distanceX = Random.Range(minDsitanceWide.x + 0f, minDsitanceWide.x + (minDsitanceWide.x * .5f));
-                Debug.Log(distanceX + "widePlatform");
-                distanceY = Random.Range(minDsitanceWide.y + 0f, minDsitanceWide.y + 10f);
-                distance = new Vector2(distanceX, distanceY + platformLocation[1].y / 2);
-                platformLocation[platformTrack] = distance;
+                while (safe == false)
+                {
+                    distanceX = 0;
+                    distanceY = 0;
+
+                    if (xPos < 0)
+                    {
+                        distanceX = randomNumber(-minDsitanceWide.x + xPos, (-minDsitanceWide.x + xPos) * 2f);
+                    }
+                    else if (xPos == 0)
+                    {
+                        distanceX = randomNumber(-5, 5);
+                    }
+                    else
+                        distanceX = randomNumber(minDsitanceWide.x + xPos, minDsitanceWide.x * 2f);
+
+                    distanceY = randomNumber(minDsitanceWide.y, minDsitanceWide.y + 15f);
+
+                    distance = new Vector2(distanceX, distanceY + layer);
+
+                    platformLocation[platformTrack] = distance;
+
+                    Checker(distance, platformTrack); //length
+                }
+
+                if (safe)
+                {
+                    //Debug.Log("checker is true spawn position equals: " + platformLocation[platformTrack - 1]);
+                    if (platformTrack > 0)
+                    {
+                        spawnWidePlatform(distance);
+                    }
+                }
 
                 break;
             default:
@@ -178,61 +376,61 @@ public class PlatformGenerator : MonoBehaviour {
     //Make this into a do-while in calculate so it can change position if need be
     void Checker(Vector3 pos, int platformTrack)
     {
-        loop = 0;
+
+        //CHANGE THIS SO IT DOESNT LOOP THROUGH ALL OBJECTS IN SCENE
+        //MAKE A CIRCLE AROUND THE OBJECT TO BE AND CHECK THAT POSITION
         bool contact = false;
-
-        foreach (Vector2 p in platformLocation)
+        
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag("Climb Me"))
         {
-            //Debug.Log(p + " " + platformTrack + "loop" + ": length: " + platformLocation.Length);
-
-            if(platformTrack < 3)
+            //Debug.Log(g.transform.position + " " + platformTrack + "loop" + ": length: " + platformLocation.Length);
+  
+            if (pos.x < g.transform.position.x + 10 && pos.x > g.transform.position.x - 10 && pos.y < g.transform.position.y + 15 && pos.y > g.transform.position.y - 15)
             {
-                if (pos.x < p.x + 2 && pos.x > p.x - 2 && pos.y < p.y + 10 && pos.y > p.y - 10 && loop != platformTrack)
-                {
-                    Debug.Log("Hello" + platformTrack + " overlapping platforms with: p" + p.x + ", " + p.y);
-                    safe = false;
+                    //Debug.Log("Hello" + platformTrack + "pos: (" + pos.x + ", " + pos.y + ")" + " overlapping platforms with: p" + g.transform.position.x + ", " + g.transform.position.y);
                     contact = true;
-                }
-
-                if(loop == 2 && !contact)
-                {
-                    safe = true;
-                }
-
+                    safe = false;
             }
 
-
-            /*else
-            {
-                Debug.Log(platformTrack + " NO OVERLAP");
-                loop++;
-                return true;
-            }*/
-
+            if (!contact)
+                safe = true;
+            else
+                safe = false;
         }
+
+
     }
 
     //Spawn
 
-    void spawnTallPlatform(Vector2 spawnLoc, Vector2 distance)
+    void spawnTallPlatform(Vector2 distance)
     {
-        Debug.Log("spawn obj");
         GameObject clone;
-        clone = Instantiate(tallPlatform, new Vector3(spawnLoc.x + distance.x, spawnLoc.y + distance.y, 25.5f), tallPlatform.transform.rotation);
+        clone = Instantiate(tallPlatform, new Vector3(distance.x, distance.y, 26.5f), tallPlatform.transform.rotation);
         clone.transform.SetParent(transform);
+        platformList.Add(clone);
     }
 
-    void spawnStandardPlatform(Vector2 spawnLoc, Vector2 distance)
+    void spawnStandardPlatform(Vector2 distance)
     {
         GameObject clone;
-        clone = Instantiate(standerdPlatform, new Vector3(spawnLoc.x + distance.x, spawnLoc.y + distance.y, 25f), tallPlatform.transform.rotation);
+        clone = Instantiate(standerdPlatform, new Vector3(distance.x, distance.y, 25.75f), standerdPlatform.transform.rotation);
         clone.transform.SetParent(transform);
+        platformList.Add(clone);
+
     }
 
-    void spawnWidePlatform(Vector2 spawnLoc, Vector2 distance)
+    void spawnWidePlatform(Vector2 distance)
     {
         GameObject clone;
-        clone = Instantiate(widePlatform, new Vector3(spawnLoc.x + distance.x, spawnLoc.y + distance.y, 25f), tallPlatform.transform.rotation);
+        clone = Instantiate(widePlatform, new Vector3(distance.x, distance.y, 25.8f), widePlatform.transform.rotation);
+        platformList.Add(clone);
         clone.transform.SetParent(transform);
+
+    }
+
+    float randomNumber(float min, float max)
+    {
+        return Random.Range(min, max);
     }
 }

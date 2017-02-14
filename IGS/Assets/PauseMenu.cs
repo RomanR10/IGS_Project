@@ -29,7 +29,7 @@ public class PauseMenu : MonoBehaviour {
     void Update()
     {
 
-        Debug.Log(tut.pauseGame);
+        //Debug.Log(tut.pauseGame);
 
         if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && pause && !tut.pauseGame && !moving)
         {

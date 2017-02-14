@@ -6,13 +6,14 @@ public class PlatformSeperator : MonoBehaviour {
 
     public float force = 3;
 
-    private bool trigger = false;
-    private Vector3 colPosition;
-    private Rigidbody2D rigidbody2D;
+    public bool trigger = false;
+    public bool playerConnected = false;
+   // private Vector3 colPosition;
+    //private Rigidbody2D rigidbody2D;
 
     void Start()
     {
-        rigidbody2D = GetComponent<Rigidbody2D>();
+        //rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
     void FixedUpdate()
@@ -23,6 +24,17 @@ public class PlatformSeperator : MonoBehaviour {
             thisBody.isKinematic = true;
         }else if (trigger)
         {
+            Rigidbody thisBody = GetComponentInParent<Rigidbody>();
+            thisBody.isKinematic = false;
+        }
+
+        if(playerConnected)
+        {
+            Rigidbody thisBody = GetComponentInParent<Rigidbody>();
+            thisBody.isKinematic = true;
+        }
+        else if (!playerConnected)
+       {
             Rigidbody thisBody = GetComponentInParent<Rigidbody>();
             thisBody.isKinematic = false;
         }
@@ -41,6 +53,8 @@ public class PlatformSeperator : MonoBehaviour {
             rel.Normalize();
             thisBody.AddForce(rel * force);
         }
+
+
         //Debug.Log(col.tag);
     }
 
